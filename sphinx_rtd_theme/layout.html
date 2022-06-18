@@ -121,9 +121,51 @@
     {%- endif %}
   {%- endblock %}
   {%- block extrahead %} {% endblock %}
+  {% if theme_hubspot_id %}
+    <!-- Start of HubSpot Embed Code -->
+    <script type="text/javascript" id="hs-script-loader" async defer src="//js.hs-scripts.com/{{ theme_hubspot_id }}.js"></script>
+    <!-- End of HubSpot Embed Code -->
+  {% endif %}
+  
+<script type="text/javascript">
+const ts3d_versions = {{ ts3d_versions }};
+
+function setupVersionList()
+{
+	var versionSelectContainer = document.getElementById("versionSelectContainer");
+	
+	if (Object.keys(ts3d_versions).length < 1)
+	{
+		// no versions to display - don't render the drop-down list
+		versionSelectContainer.style.display = "none";
+		return;
+	}
+	
+	var outputHTML = "";
+
+	for (let i = 0; i < ts3d_versions.length; i++)
+	{
+		outputHTML += ("<option value='" + ts3d_versions[i] + "'>" + ts3d_versions[i] + "</option>");
+	}
+
+	document.getElementById("ts3d-versions").innerHTML = outputHTML;
+};
+
+function changeVersion()
+{
+  var selectedVersion = document.getElementById("ts3d-versions").value;
+  let docsRoot = "http://docs.techsoft3d.com";
+  let destinationVersion = ts3d_versions[selectedVersion];
+  let pathName = window.location.pathname; // contains a leading '/' in the string
+
+  // no '/' between destinationVerison and pathName because window.location.pathname comes with a leading '/'
+  let destination = `${docsRoot}/${destinationVersion}${pathName}`;
+  window.location.href = destination;
+};
+</script>
 </head>
 
-<body class="wy-body-for-nav">
+<body class="wy-body-for-nav" onload="setupVersionList()">
 
   {%- block extrabody %} {% endblock %}
   <div class="wy-grid-for-nav">
@@ -186,6 +228,7 @@
         </div>
         {%- endblock %}
       </div>
+      <div id="versionSelectContainer"><span style="position: absolute; bottom: 5px; left: 10px;">Select version:</span><select style="position: absolute; bottom: 0px; " id="ts3d-versions"  onchange="changeVersion()"></select></div>
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
@@ -251,7 +294,11 @@
     {%- endif %}
   {%- endif %}
 
-  {%- block footer %} {% endblock %}
+  {%- block footer %} 
+  
+  <img alt="Return to top" class="scrollToTopBtn" src="{{ pathto('_static/images/topbtn.png', 1) }}">
+  
+  {% endblock %}
 
 </body>
 </html>
