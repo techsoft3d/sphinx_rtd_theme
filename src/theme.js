@@ -263,3 +263,44 @@ if (typeof(window) != 'undefined') {
             clearTimeout(id);
         };
 }());
+
+$(document).ready(function() {	
+  $('.go-top').click(function(event) {
+    event.preventDefault();
+
+    $('html, body').animate({scrollTop: 0}, 300);
+  });
+
+    var scrollToTopBtn = document.querySelector(".scrollToTopBtn");
+    var rootElement = document.documentElement;
+
+    function handleScroll() {
+        // After a scroll, if the user has scrolled 20% or more of the page height
+        // then show the "return to top" button
+        // else hide the "return to top" button
+        if (window.scrollY / document.body.clientHeight > 0.8) {
+            // Show button
+            scrollToTopBtn.classList.add("showBtn");
+            let articleBodyWidth = document.querySelector("body > div.wy-grid-for-nav > nav"),clientWidth;
+            let sideNavWidth = document.querySelector("body > div.wy-grid-for-nav > nav").clientWidth;
+            let bodyWidth = document.body.clientWidth;
+            let rightPos = bodyWidth - (sideNavWidth + articleBodyWidth);
+            rightPos = rightPos + 10; // padding
+            scrollToTopBtn.setAttribute('right', rightPos);
+        } else {
+            // Hide button
+            scrollToTopBtn.classList.remove("showBtn");
+        }
+    }
+
+    function scrollToTop() {
+        // Scroll to top logic
+        rootElement.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+    }
+
+    scrollToTopBtn.addEventListener("click", scrollToTop);
+    document.addEventListener("scroll", handleScroll);
+});
